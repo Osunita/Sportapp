@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {LoginComponent} from '../login/login';
 
 @Component({
   selector: 'app-register',
@@ -6,6 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register {
+export class RegisterComponent {
 
 }
