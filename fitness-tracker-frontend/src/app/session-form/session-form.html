@@ -1,1 +1,11 @@
-<p>session-form works!</p>
+<form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+  <input formControlName="sportType" placeholder="Deporte">
+  <input formControlName="duration" type="number" placeholder="Duración (min)">
+  <select formControlName="intensity">
+    <option>LOW</option>
+    <option>MEDIUM</option>
+    <option>HIGH</option>
+  </select>
+  <textarea formControlName="notes" placeholder="Notas"></textarea>
+  <button type="submit" [disabled]="sessionForm.invalid">Guardar</button>
+</form>

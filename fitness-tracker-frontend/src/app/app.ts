@@ -8,6 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class AppComponent {
   protected readonly title = signal('fitness-tracker-frontend');
 }

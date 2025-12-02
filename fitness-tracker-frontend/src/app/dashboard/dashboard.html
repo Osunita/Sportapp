@@ -1,1 +1,34 @@
-<p>dashboard works!</p>
+<div class="container">
+  <h2>Dashboard</h2>
+  <p *ngIf="reminder">{{ reminder }}</p>
+
+  <h3>Sesiones de Entrenamiento</h3>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Deporte</th>
+      <th>Duración (min)</th>
+      <th>Intensidad</th>
+      <th>Notas</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let session of sessions">
+      <td>{{ session.date }}</td>
+      <td>{{ session.sportType }}</td>
+      <td>{{ session.duration }}</td>
+      <td>{{ session.intensity }}</td>
+      <td>{{ session.notes }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h3>Progreso Semanal</h3>
+  <canvas id="weeklyChart"></canvas>
+
+  <h3>Distribución por Deporte</h3>
+  <canvas id="sportChart"></canvas>
+
+  <app-session-form></app-session-form>  // Form para nueva sesión
+</div>
