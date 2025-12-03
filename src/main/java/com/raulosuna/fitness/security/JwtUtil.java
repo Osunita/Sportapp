@@ -36,11 +36,16 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
+/*
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+*/
+    private SecretKey getSignInKey() {
+      return Jwts.SIG.HS256.key().build();
+    }
+
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
