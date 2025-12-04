@@ -15,6 +15,30 @@ public class SessionController {
 
     private final SessionService sessionService;
 
+    private String getCurrentUserEmail() {
+        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @GetMapping
+    public List<Session> getUserSessions() {
+        return sessionService.getSessionsByEmail(getCurrentUserEmail());
+    }
+
+    @PostMapping
+    public Session createSession(@RequestBody Session session) {
+        return sessionService.createSession(session, getCurrentUserEmail());
+    }
+
+    @PutMapping("/{id}")
+    public Session updateSession(@PathVariable Long id, @RequestBody Session session) {
+        return sessionService.updateSession(id, session, getCurrentUserEmail());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteSession(@PathVariable Long id) {
+        sessionService.deleteSession(id, getCurrentUserEmail());
+    }
+/*
     @GetMapping
     public List<Session> getSessions() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -32,4 +56,6 @@ public class SessionController {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         sessionService.deleteSession(id, email);
     }
+
+ */
 }

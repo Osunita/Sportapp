@@ -1,5 +1,6 @@
 package com.raulosuna.fitness.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -15,8 +16,10 @@ public class Session {
     private String name;
     private LocalDateTime dateTime;
     private Integer durationMinutes;
+    private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 }
