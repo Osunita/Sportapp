@@ -38,24 +38,4 @@ public class SessionController {
     public void deleteSession(@PathVariable Long id) {
         sessionService.deleteSession(id, getCurrentUserEmail());
     }
-/*
-    @GetMapping
-    public List<Session> getSessions() {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return sessionService.getSessionsByUserEmail(email);
-    }
-
-    @PostMapping
-    public Session createSession(@RequestBody Session sessionRequest) {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return sessionService.createSession(email, sessionRequest);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteSession(@PathVariable Long id) {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        sessionService.deleteSession(id, email);
-    }
-
- */
 }
