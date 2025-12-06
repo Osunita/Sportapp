@@ -20,7 +20,7 @@ public class Exercise {
     private Integer reps;       // Repeticiones por serie
     private Double weight;      // Peso usado (kg), puede ser null
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "session_id")
     @JsonIgnore
     private Session session;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "sessions")
@@ -17,6 +18,9 @@ public class Session {
     private LocalDateTime dateTime;
     private Integer durationMinutes;
     private String comment;
+
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
+    private List<Exercise> exercises;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

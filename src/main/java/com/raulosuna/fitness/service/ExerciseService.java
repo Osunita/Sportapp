@@ -2,10 +2,8 @@ package com.raulosuna.fitness.service;
 
 import com.raulosuna.fitness.model.Exercise;
 import com.raulosuna.fitness.model.Session;
-import com.raulosuna.fitness.model.User;
 import com.raulosuna.fitness.repository.ExerciseRepository;
 import com.raulosuna.fitness.repository.SessionRepository;
-import com.raulosuna.fitness.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,56 +13,61 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExerciseService {
 
-    private final ExerciseRepository exerciseRepository;
     private final SessionRepository sessionRepository;
-    private final UserRepository userRepository;
+    private final ExerciseRepository exerciseRepository;
 
-    private Session getValidatedSession(Long sessionId, String userEmail) {
+    // Verifica que la sesión exista y pertenece al email
+    private Session getValidatedSession(Long sessionId, String email) {
         Session session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+                .orElseThrow(() -> new RuntimeException("Session no encontrada"));
 
-        if (!session.getUser().getEmail().equals(userEmail)) {
-            throw new RuntimeException("No autorizado");
+        if (!session.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("No tienes permiso para esta sesión");
         }
 
         return session;
     }
 
-    public List<Exercise> getExercises(Long sessionId, String userEmail) {
-        Session session = getValidatedSession(sessionId, userEmail);
-        return exerciseRepository.findBySession(session);
-    }
-
-    public Exercise addExercise(Long sessionId, Exercise exercise, String userEmail) {
-        Session session = getValidatedSession(sessionId, userEmail);
+    // Crear ejercicio
+    public Exercise addExercise(Long sessionId, Exercise exercise, String email) {
+        Session session = getValidatedSession(sessionId, email);
         exercise.setSession(session);
         return exerciseRepository.save(exercise);
     }
 
-    public Exercise updateExercise(Long exerciseId, Exercise updated, String userEmail) {
-        Exercise existing = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new RuntimeException("Ejercicio no encontrado"));
-
-        if (!existing.getSession().getUser().getEmail().equals(userEmail)) {
-            throw new RuntimeException("No autorizado");
-        }
-
-        existing.setName(updated.getName());
-        existing.setSets(updated.getSets());
-        existing.setReps(updated.getReps());
-        existing.setWeight(updated.getWeight());
-
-        return exerciseRepository.save(existing);
+    // Obtener ejercicios de una sesión
+    public List<Exercise> getExercises(Long sessionId, String email) {
+        Session session = getValidatedSession(sessionId, email);
+        return session.getExercises(); // ya está en memoria
     }
 
-    public void deleteExercise(Long exerciseId, String userEmail) {
-        Exercise existing = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new RuntimeException("Ejercicio no encontrado"));
+    // Editar ejercicio
+    public Exercise updateExercise(Long exerciseId, Exercise updated, String email) {
+        Exercise exercise = exerciseRepository.findById(exerciseId)
+                .orElseThrow(() -> new RuntimeException("Exercise no encontrado"));
 
-        if (!existing.getSession().getUser().getEmail().equals(userEmail)) {
-            throw new RuntimeException("No autorizado");
+        // Validar owner
+        if (!exercise.getSession().getUser().getEmail().equals(email)) {
+            throw new RuntimeException("No tienes permiso para editar este ejercicio");
         }
 
-        exerciseRepository.delete(existing);
+        exercise.setName(updated.getName());
+        exercise.setSets(updated.getSets());
+        exercise.setReps(updated.getReps());
+        exercise.setWeight(updated.getWeight());
+
+        return exerciseRepository.save(exercise);
+    }
+
+    // Eliminar ejercicio
+    public void deleteExercise(Long exerciseId, String email) {
+        Exercise exercise = exerciseRepository.findById(exerciseId)
+                .orElseThrow(() -> new RuntimeException("Exercise no encontrado"));
+
+        if (!exercise.getSession().getUser().getEmail().equals(email)) {
+            throw new RuntimeException("No tienes permiso para eliminar este ejercicio");
+        }
+
+        exerciseRepository.delete(exercise);
     }
 }

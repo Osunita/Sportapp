@@ -9,33 +9,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/sessions/{sessionId}/exercises")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
 
-    private String getEmail() {
+    private String getCurrentUserEmail() {
         return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    @GetMapping
-    public List<Exercise> list(@PathVariable Long sessionId) {
-        return exerciseService.getExercises(sessionId, getEmail());
-    }
-
-    @PostMapping
+    @PostMapping("/sessions/{sessionId}/exercises")
     public Exercise create(@PathVariable Long sessionId, @RequestBody Exercise exercise) {
-        return exerciseService.addExercise(sessionId, exercise, getEmail());
+        return exerciseService.addExercise(sessionId, exercise, getCurrentUserEmail());
     }
 
-    @PutMapping("/{exerciseId}")
-    public Exercise update(@PathVariable Long exerciseId, @RequestBody Exercise exercise) {
-        return exerciseService.updateExercise(exerciseId, exercise, getEmail());
+    @GetMapping("/sessions/{sessionId}/exercises")
+    public List<Exercise> list(@PathVariable Long sessionId) {
+        return exerciseService.getExercises(sessionId, getCurrentUserEmail());
     }
 
-    @DeleteMapping("/{exerciseId}")
-    public void delete(@PathVariable Long exerciseId) {
-        exerciseService.deleteExercise(exerciseId, getEmail());
+    @PutMapping("/exercises/{id}")
+    public Exercise update(@PathVariable Long id, @RequestBody Exercise exercise) {
+        return exerciseService.updateExercise(id, exercise, getCurrentUserEmail());
+    }
+
+    @DeleteMapping("/exercises/{id}")
+    public void delete(@PathVariable Long id) {
+        exerciseService.deleteExercise(id, getCurrentUserEmail());
     }
 }
